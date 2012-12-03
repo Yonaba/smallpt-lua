@@ -22,20 +22,25 @@
 --]]
 
 if (...) then
-  
+
   local sqrt = math.sqrt
-  
+
   local clamp = function(v, mn, mx)
     mn, mx = mn or 0, mx or 1
     return v < mn and mn or (v > mx and mx or v)
   end
+
+  local Vec3 = {x = 0, y = 0, z = 0}
+  Vec3.__index = Vec3
   
-  local Vec3 = {x = 0, y = 0}
-  
-  function Vec3:new(x, y, z)
-    self.x, self.y, self.z = x or 0, y or 0, z or 0
+  function Vec3.new(v, x, y, z)
+    return setmetatable({
+      x = x or 0,
+      y = y or 0,
+      z = z or 0,
+      },v)
   end
-    
+
   function Vec3.__tostring(a)
     return ('Vec3: x: %.3f y:%.3f z: %.3f')
             :format(a.x, a.y, a.z)
@@ -46,42 +51,47 @@ if (...) then
   end
 
   function Vec3.__add(a, b)
-    return Vec3(a.x + b.x, a.y + b.y, a.z + b.z)
+    return Vec3:new(a.x + b.x, a.y + b.y, a.z + b.z)
   end
 
   function Vec3.__sub(a, b)
-    return Vec3(a.x - b.x, a.y - b.y, a.z - b.z)
+    return Vec3:new(a.x - b.x, a.y - b.y, a.z - b.z)
   end
 
   function Vec3.__mul(v, f)
-    return Vec3(v.x * f, v.y * f, v.z * f)
+    return Vec3:new(v.x * f, v.y * f, v.z * f)
   end
-  
+
   function Vec3.mul(a, b)
-    return Vec3(a.x * b.x, a.y * b.y, a.z * b.z) 
+    return Vec3:new(a.x * b.x, a.y * b.y, a.z * b.z)
   end
 
   function Vec3.dot(a, b)
     return (a.x * b.x + a.y * b.y + a.z * b.z)
   end
-  
+
   function Vec3.__mod(a, b)
-    return Vec3(
+    return Vec3:new(
       a.y * b.z - a.z * b.y,
       a.z * b.x - a.x * b.z,
-      a.x * b.y - a.y * b.x,
+      a.x * b.y - a.y * b.x
     )
   end
-  
+
   function Vec3.norm(a)
     local l = 1/sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
     self.x, self.y, self.z = self.x * l, self.y * l, self.z * l
-  end
-  
-  function Vec3.clamp(a)
-    return Vec3(clamp(a.x), clamp(a.y), clamp(a.z))
+    return self
   end
 
-  return Vec3
-  
+  function Vec3.clamp(a)
+    return Vec3:new(clamp(a.x), clamp(a.y), clamp(a.z))
+  end
+
+  return setmetatable(Vec3,
+    {__call= function(self,...)
+        return Vec3:new(...)
+      end
+    })
+
 end
