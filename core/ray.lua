@@ -33,6 +33,10 @@ if (...) then
     },ray)
   end
   
+  function Ray.pointAt(ray, d)
+    return ray.origin + (ray.direction * d)
+  end
+  
   return setmetatable(Ray,
     {__call= function(self,...)
         return Ray:new(...)
