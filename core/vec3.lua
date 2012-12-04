@@ -46,8 +46,8 @@ if (...) then
             :format(a.x, a.y, a.z)
   end
 
-  function Vec3:len()
-    return sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
+  function Vec3.len(a)
+    return sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
   end
 
   function Vec3.__add(a, b)
@@ -79,9 +79,9 @@ if (...) then
   end
 
   function Vec3.norm(a)
-    local l = 1/sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
-    self.x, self.y, self.z = self.x * l, self.y * l, self.z * l
-    return self
+    local l = 1/sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
+    a.x, a.y, a.z = a.x * l, a.y * l, a.z * l
+    return a
   end
 
   function Vec3.clamp(a)
