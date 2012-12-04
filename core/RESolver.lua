@@ -23,7 +23,7 @@
 
 if (...) then
   local max, rand = math.max, math.random()
-  local MAX_DEPTH = 6
+  local MAX_DEPTH = 5
   local Vec3 = require ((...):gsub('[^%.]+$','') .. ('core.vec3'))
   
   return function(scene, ray, depth, inclEmColor)
