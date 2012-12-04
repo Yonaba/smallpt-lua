@@ -26,10 +26,10 @@ if (...) then
   local Ray = require (_BASE .. ('core.ray'))
   local RESolver = require (_BASE .. ('core.RESolver'))
   
-  return function (scene, ray, hitPoint, n, diffColor, emColor, depth)
+  return function (scene, ray, hitPoint, n, color, emColor, inclEmColor, depth)
     local newRay = Ray(hitPoint, ray.direction - n * (2 * n:dot(ray.direction)))
     local newRadiance = RESolver(scene, newRay, depth)
-    return emColor + f:mul(newRadiance)  
+    return emColor + color:mul(newRadiance)
   end
 
 end

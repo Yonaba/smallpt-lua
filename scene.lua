@@ -22,7 +22,9 @@
 --]]
 
 if (...) then
-  
+  local _BASE = (...):match('^[^%.]+%.') 
+  local Vec3 = require (_BASE .. ('core.vec3'))
+  local Ray = require (_BASE .. ('core.ray'))
   local INFINITY = 1e20
   
   local Scene = {}
@@ -31,7 +33,7 @@ if (...) then
   function Scene.new(scene)
     return setmetatable({
       primitives = {},
-      shaders = {}
+      shaders = {},
     },scene)
   end
   
@@ -50,6 +52,12 @@ if (...) then
       end        
     end
     return t, hitPrim  
+  end
+  
+  function Scene.render(scene, w, h, samples)
+    local cam = Ray(Vec3(50,50,295.6), Vec3(0,-0.062612,-1):norm())
+    local cx = Vec3(w * 0.5135*h)
+    local cy = ((cx%(cam.direction)):norm()) * 0.5135
   end
   
   return setmetatable(Scene,

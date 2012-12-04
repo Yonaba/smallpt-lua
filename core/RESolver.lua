@@ -26,7 +26,7 @@ if (...) then
   local MAX_DEPTH = 6
   local Vec3 = require ((...):gsub('[^%.]+$','') .. ('core.vec3'))
   
-  return function(scene, ray, depth)
+  return function(scene, ray, depth, inclEmColor)
     local hitDistance, hitPrim = scene:getNearestHitPrimitive(ray)
     if not hitPrim then return Vec3() end
     local hitPoint = ray:pointAt(hitDistance)
@@ -36,12 +36,12 @@ if (...) then
     local fColor = hitPrim.color
     if depth > MAX_DEPTH then  
       if rand() < p then fColor = hitPrim.color * (1/p)
-      else return hitPrim.emColor
+      else return hitPrim.emColor * inclEmColor
       end
     end
     return scene.shaders[hitPrim.reflectionType](
       ray, hitPoint, hitNormal, 
-      fColor, hitPrim.emColor, 
+      fColor, hitPrim.emColor, inclEmColor,
       depth)    
   end
 end
