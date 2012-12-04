@@ -37,6 +37,21 @@ if (...) then
     return map
   end
   
+  local mapArray2D = function(map, f, ...)
+    for y = 1, #map do 
+      for x = 1, #map[y] do 
+        map[y][x].x = f(map[y][x].x, ...)
+        map[y][x].y = f(map[y][x].y, ...)
+        map[y][x].z = f(map[y][x].z, ...)
+      end
+    end  
+  end  
+  
+  local gammaCorrection = function(value, factor, range)
+    return floor(pow(x,1/factor) * range + 0.5)
+  end
+
+  
   local Scene = {}
   Scene.__index = Scene
   
@@ -87,7 +102,7 @@ if (...) then
               local newRay = Ray(cam.origin + d * 140, d:norm())
               r = r + RESolver(scene, newRay, 0) * (1/samps)
             end
-            map[y][x] = map[y][x] + r:clamp() * 0.25
+            map[y][x] = map[y][x] + r:clamp() * 0.25            
           end        
       end
     end
