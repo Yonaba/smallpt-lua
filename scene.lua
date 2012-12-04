@@ -22,10 +22,20 @@
 --]]
 
 if (...) then
-  local _BASE = (...):match('^[^%.]+%.') 
+  local rand = math.random()
+  local _BASE = (...):match('(.+)%w+%.lua$')) 
   local Vec3 = require (_BASE .. ('core.vec3'))
   local Ray = require (_BASE .. ('core.ray'))
+  local RESolver = require (_BASE .. ('core.RESolver'))
   local INFINITY = 1e20
+  
+  local array2D = function (w, h)
+    local map = {}
+    for y = 1, h do map[y] = {}
+      for i = 1, w do map[y][i] = Vec3() end
+    end
+    return map
+  end
   
   local Scene = {}
   Scene.__index = Scene
@@ -54,10 +64,33 @@ if (...) then
     return t, hitPrim  
   end
   
-  function Scene.render(scene, w, h, samples)
-    local cam = Ray(Vec3(50,50,295.6), Vec3(0,-0.062612,-1):norm())
-    local cx = Vec3(w * 0.5135*h)
-    local cy = ((cx%(cam.direction)):norm()) * 0.5135
+  function Scene.render(scene, w, h, samps)
+    local cam = Ray(Vec3(50,52,295.6), Vec3(0,-0.042612,-1):norm())
+    local cx = Vec3(w * 0.5135 / h)
+    local cy = ((cx % (cam.direction)):norm()) * 0.5135
+    local map = array2D(w,h)
+    
+    for y = 1, h do
+      for x = 1, w do
+        for sy = 0, 1 do
+          for sx = 0, 1 do
+            local r = Vec()
+            for s = 1, samps do
+              local r = Vec3()
+              local r1 , r2 = 2 * rand(), 2 * rand()
+              local dx = r1 < 1 and sqrt(r1) - 1 or 1 - sqrt(2 - r1)
+              local dy = r2 < 1 and sqrt(r2) - 1 or 1 - sqrt(2 - r2)
+              local d = cx * (((sx + 0.5 + dx) / 2 + x) / w - 0.5)
+                     + cy * (((sy + 0.5 + dy) / 2 + y) / h - 0.5)
+                     + cam.d
+              
+              local newRay = Ray(cam.origin + d * 140, d:norm())
+              r = r + RESolver(scene, newRay, 0) * (1/samps)
+            end
+            map[y][x] = map[y][x] + r:clamp() * 0.25
+          end        
+      end
+    end
   end
   
   return setmetatable(Scene,
