@@ -24,7 +24,7 @@
 if (...) then
   local max, rand = math.max, math.random()
   local MAX_DEPTH = 5
-  local Vec3 = require ((...):gsub('[^%.]+$','') .. ('core.vec3'))
+  local Vec3 = require ((...):match('(.+)%w+%.lua$') .. ('vec3'))
   
   return function(scene, ray, depth, inclEmColor)
     local hitDistance, hitPrim = scene:getNearestHitPrimitive(ray)

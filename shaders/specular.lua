@@ -22,7 +22,7 @@
 --]]
 
 if (...) then
-  local _BASE = (...):match('^[^%.]+%.')
+  local _BASE = (...):match('(.+%.)%w+%.%w+%.lua$')
   local Ray = require (_BASE .. ('core.ray'))
   local RESolver = require (_BASE .. ('core.RESolver'))
   

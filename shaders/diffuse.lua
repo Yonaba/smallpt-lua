@@ -24,7 +24,7 @@
 if (...) then
   local pi, cos, sin, sqrt =  math.pi, math.cos, math.sin, math.sqrt
   local tau, abs = 2 * pi, math.abs
-  local _BASE = (...):match('^[^%.]+%.')
+  local _BASE = (...):match('(.+%.)%w+%.%w+%.lua$')
   local Vec3 = require (_BASE .. ('core.vec3'))
   local Ray = require (_BASE .. ('core.ray'))
   local RESolver = require (_BASE .. ('core.RESolver'))

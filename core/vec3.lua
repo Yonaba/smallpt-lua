@@ -23,7 +23,7 @@
 
 if (...) then
 
-  local sqrt = math.sqrt
+  local sqrt, max = math.sqrt, math.max
 
   local clamp = function(v, mn, mx)
     mn, mx = mn or 0, mx or 1
@@ -90,6 +90,10 @@ if (...) then
 
   function Vec3.clamp(a)
     return Vec3:new(clamp(a.x), clamp(a.y), clamp(a.z))
+  end
+  
+  function Vec3.isNought(a)
+    return (a.x+a.y+a.z) == 0
   end
 
   return setmetatable(Vec3,
