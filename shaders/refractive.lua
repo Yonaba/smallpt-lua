@@ -55,9 +55,9 @@ if (...) then
     local TP = Tr / (1 - P)
     
     local newRadiance = depth > 2 and rand() < P 
-      and (RESolver(reflRay, depth) * RP)
-       or (RESolver(Ray(hitPoint, tdir), depth) * TP)
-       or (RESolver(reflRay, depth) * Re + RESolver(Ray(hitPoint, tdir), depth) * Tr)
+      and (RESolver(scene, reflRay, depth) * RP)
+       or (RESolver(scene, Ray(hitPoint, tdir), depth) * TP)
+       or (RESolver(scene, reflRay, depth) * Re + RESolver(scene, Ray(hitPoint, tdir), depth) * Tr)
        
     return emColor + color:mul(newRadiance)    
   end

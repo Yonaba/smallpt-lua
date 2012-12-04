@@ -36,10 +36,10 @@ if (...) then
     local fColor = hitPrim.color
     if depth > MAX_DEPTH then  
       if rand() < p then fColor = hitPrim.color * (1/p)
-      else return hitPrim.emColor * inclEmColor
+      else return hitPrim.emColor * (inclEmColor or 1)
       end
     end
-    return scene.shaders[hitPrim.reflectionType](
+    return scene.shaders[hitPrim.reflectionType](scene,
       ray, hitPoint, hitNormal, 
       fColor, hitPrim.emColor, inclEmColor,
       depth)    
