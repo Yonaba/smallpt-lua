@@ -77,6 +77,10 @@ if (...) then
       a.x * b.y - a.y * b.x
     )
   end
+  
+  function Vec3.__unm(a)
+    return Vec3:new(-a.x, -a.y, -a.z)
+  end
 
   function Vec3.norm(a)
     local l = 1/sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
