@@ -22,36 +22,26 @@
 --]]
 
 if (...) then
+  local max, rand = math.max, math.random()
+  local MAX_DEPTH = 6
+  local Vec3 = require ((...):gsub('[^%.]+$','') .. ('core.vec3'))
   
-  local sqrt = math.sqrt
-  local EPS = 1e-4
-  
-  local Sphere = {}
-  Sphere.__index = Sphere
-  
-  function Sphere.new(sphere, position, radius, emission, color, reflectionType)
-    return setmetatable({
-      position = position,
-      radius = radius, radiusSq = radius * radius,
-      emission = emission, color = color,
-      reflectionType = reflectionType or 'DIFF'
-    },sphere)
-  end
-  
-  function Sphere.hit(sphere, ray)
-    local op = sphere.position - ray.origin
-    local B = op:dot(ray.direction)
-    local delta = (B*B) - op:dot(op) + sphere.radiusSq
-    if delta < 0 then return false end
-    delta = sqrt(delta)
-    local t1, t2 = b - delta, b + delta
-    return t1 > EPS and t1 or (t2 > EPS and t2 or false)
-  end
-  
-  return setmetatable(Sphere,
-    {__call= function(self,...)
-        return Sphere:new(...)
+  return function(scene, ray, depth, inclEmColor)
+    local hitDistance, hitPrim = scene:getNearestHitPrimitive(ray)
+    if not hitPrim then return Vec3() end
+    local hitPoint = ray:pointAt(hitDistance)
+    local hitNormal = (hitPoint - hitPrim.position):norm()
+    local p = max(hitPrim.color.x, hitPrim.color.y, hitPrim.color.z)
+    depth = depth + 1
+    local fColor = hitPrim.color
+    if depth > MAX_DEPTH then  
+      if rand() < p then fColor = hitPrim.color * (1/p)
+      else return hitPrim.emColor * inclEmColor
       end
-    })
-  
+    end
+    return scene.shaders[hitPrim.reflectionType](
+      ray, hitPoint, hitNormal, 
+      fColor, hitPrim.emColor, inclEmColor, 
+      depth)    
+  end
 end

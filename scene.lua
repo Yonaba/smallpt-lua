@@ -31,6 +31,7 @@ if (...) then
   function Scene.new(scene)
     return setmetatable({
       primitives = {},
+      shaders = {}
     },scene)
   end
   
@@ -38,7 +39,7 @@ if (...) then
     scene.primitives[#scene.primitives+1] = prim
   end
   
-  function Scene.getLowestHitPrimitive(scene, ray)
+  function Scene.getNearestHitPrimitive(scene, ray)
     local t = INFINITY
     local hitPrim
     for i = 1,#scene.primitives do
