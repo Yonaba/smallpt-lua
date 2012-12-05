@@ -23,12 +23,13 @@
 
 if (...) then
   local pi, cos, sin, sqrt =  math.pi, math.cos, math.sin, math.sqrt
-  local tau, abs = 2 * pi, math.abs
-  local _BASE = (...):match('(.+%.)%w+%.%w+%.lua$')
+  local tau, invPi, abs, rand = 2 * pi, 1/pi, math.abs, math.random
+  print('_BASE diffuse',...)
+  local _BASE = (...):match('(.*)shaders.diffuse$')
   local Vec3 = require (_BASE .. ('core.vec3'))
   local Ray = require (_BASE .. ('core.ray'))
   local RESolver = require (_BASE .. ('core.RESolver'))
-  
+
   return function (scene, ray, hitPoint, n, color, emColor, inclEmColor, depth)
     local nl = n:dot(ray.direction) < 0 and n or -n
     local r1, r2 = tau * rand(), rand()
@@ -37,36 +38,36 @@ if (...) then
     local v = (w%u)
     local d = (u * (cos(r1) * r2s) + v * (sin(r1) * r2s) + w * (sqrt(1-r2))):norm()
     local emColor = Vec3()
-    
+
     for i = 1,#scene.primitives do
       local prim = scene.primitives[i]
-      if not prim.emColor:isNought() then
+      if not prim.emission:isNought() then
         local sw = prim.position - hitPoint
         local su = abs(sw.x) > 0.1 and Vec3(0,1,0) or (Vec3(1,1,1)%sw):norm()
         local sv = (sw%su)
-        
-        local cos_a_max = sqrt(1 - (prim.radius * prim.radius) / 
+
+        local cos_a_max = sqrt(1 - (prim.radius * prim.radius) /
             ((hitPoint - prim.position):dot(hitPoint - prim.position)))
         local eps1, eps2 = rand(), rand()
         local cos_a = 1 - eps1 + eps1 * cos_a_max
         local sin_a = sqrt(1 - cos_a * cos_a)
         local phi = tau * eps2
         local l = (su * (cos(phi) * sin_a) + sv * (sin(phi) * sin_a) + sw * (cos_a)):norm()
-        
+
         local shadowRay = Ray(hitPoint, l)
         local hitDistance, hitPrim = scene:getNearestHitPrimitive(shadowRay)
         if hitPrim then
-          local omega = tau * (1 - cos_a_max)      
-          emColor = emColor + color:mul(prim.emColor * (l:dot(nl) * omega * invPi))
-        end        
-      end      
-    end*
-    
+          local omega = tau * (1 - cos_a_max)
+          emColor = emColor + color:mul(prim.emission * (l:dot(nl) * omega * invPi))
+        end
+      end
+    end
+
     local newRay = Ray(hitPoint, d)
     local newRadiance = RESolver(scene, newRay, depth, 0)
     return emColor * (inclEmColor or 1) + color:mul(newRadiance)
-    
-     
+
+
   end
 
 end

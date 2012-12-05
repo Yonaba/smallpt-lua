@@ -27,6 +27,11 @@ if (...) then
   local Vec3 = require (_BASE .. ('core.vec3'))
   local Ray = require (_BASE .. ('core.ray'))
   local RESolver = require (_BASE .. ('core.RESolver'))
+  local SHADERS = {
+	['DIFF'] = require (_BASE .. ('shaders.diffuse')),
+	['REFR'] = require (_BASE .. ('shaders.refractive')),
+	['SPEC'] = require (_BASE .. ('shaders.specular'))
+  }
   local INFINITY = 1e20
   local rand, sqrt = math.random, math.sqrt
 
@@ -59,7 +64,7 @@ if (...) then
   function Scene.new(scene)
     return setmetatable({
       primitives = {},
-      shaders = {},
+      shaders =  SHADERS,
     },scene)
   end
 

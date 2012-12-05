@@ -22,7 +22,7 @@
 --]]
 
 if (...) then
-  local max, rand = math.max, math.random()
+  local max, rand = math.max, math.random
   local MAX_DEPTH = 5
   local Vec3 = require ((...):gsub('RESolver','vec3'))
 
@@ -36,12 +36,12 @@ if (...) then
     local fColor = hitPrim.color
     if depth > MAX_DEPTH then
       if rand() < p then fColor = hitPrim.color * (1/p)
-      else return hitPrim.emColor * (inclEmColor or 1)
+      else return hitPrim.emission * (inclEmColor or 1)
       end
     end
     return scene.shaders[hitPrim.reflectionType](scene,
       ray, hitPoint, hitNormal,
-      fColor, hitPrim.emColor, inclEmColor,
+      fColor, hitPrim.emission, inclEmColor,
       depth)
   end
 end

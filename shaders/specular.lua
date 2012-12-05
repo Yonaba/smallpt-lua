@@ -22,10 +22,10 @@
 --]]
 
 if (...) then
-  local _BASE = (...):match('(.+%.)%w+%.%w+%.lua$')
+  local _BASE = (...):match('(.*)shaders.specular$')
   local Ray = require (_BASE .. ('core.ray'))
   local RESolver = require (_BASE .. ('core.RESolver'))
-  
+
   return function (scene, ray, hitPoint, n, color, emColor, inclEmColor, depth)
     local newRay = Ray(hitPoint, ray.direction - n * (2 * n:dot(ray.direction)))
     local newRadiance = RESolver(scene, newRay, depth)
