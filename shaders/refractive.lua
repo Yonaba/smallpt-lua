@@ -59,7 +59,6 @@ if (...) then
        or (RESolver(scene, Ray(hitPoint, tdir), depth) * TP)
        or (RESolver(scene, reflRay, depth) * Re + RESolver(scene, Ray(hitPoint, tdir), depth) * Tr)
 
-	print('EmColor is',emColor)
     return emColor + color:mul(newRadiance)
   end
 

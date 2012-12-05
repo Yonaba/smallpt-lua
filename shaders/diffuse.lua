@@ -24,7 +24,6 @@
 if (...) then
   local pi, cos, sin, sqrt =  math.pi, math.cos, math.sin, math.sqrt
   local tau, invPi, abs, rand = 2 * pi, 1/pi, math.abs, math.random
-  print('_BASE diffuse',...)
   local _BASE = (...):match('(.*)shaders.diffuse$')
   local Vec3 = require (_BASE .. ('core.vec3'))
   local Ray = require (_BASE .. ('core.ray'))

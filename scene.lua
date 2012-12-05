@@ -33,7 +33,7 @@ if (...) then
 	['SPEC'] = require (_BASE .. ('shaders.specular'))
   }
   local INFINITY = 1e20
-  local rand, sqrt = math.random, math.sqrt
+  local rand, sqrt, pow, floor = math.random, math.sqrt, math.pow, math.floor
 
   local array2D = function (w, h)
     local map = {}
@@ -51,9 +51,10 @@ if (...) then
         map[y][x].z = f(map[y][x].z, ...)
       end
     end
+    return map
   end
 
-  local gammaCorrection = function(value, factor, range)
+  local gammaCorrection = function(x, factor, range)
     return floor(pow(x,1/factor) * range + 0.5)
   end
 
@@ -94,12 +95,13 @@ if (...) then
     local map = array2D(w,h)
 
     for y = 1, h do
+      io.write(('Rendering: %.2f %% (%d/%d)\r'):format(y/h,y,h))
       for x = 1, w do
         for sy = 0, 1 do
           for sx = 0, 1 do
             local r = Vec3()
             for s = 1, samps do
-              local r = Vec3()
+              --local r = Vec3()
               local r1 , r2 = 2 * rand(), 2 * rand()
               local dx = r1 < 1 and sqrt(r1) - 1 or 1 - sqrt(2 - r1)
               local dy = r2 < 1 and sqrt(r2) - 1 or 1 - sqrt(2 - r2)
@@ -110,13 +112,15 @@ if (...) then
               local newRay = Ray(cam.origin + d * 140, d:norm())
               r = r + RESolver(scene, newRay, 0) * (1/samps)
             end
-            map[y][x] = map[y][x] + r:clamp() * 0.25
+            map[h-y+1][x] = map[h-y+1][x] + r:clamp() * 0.25
           end
-		end
+        end
+        --print(('x,y : %d,%d - col:%s'):format(x,y,tostring(map[y][x])))
+        --io.read()
       end
     end
 
-    return map
+    return mapArray2D(map,gammaCorrection,2.2,255)
   end
 
   return setmetatable(Scene,
