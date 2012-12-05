@@ -22,13 +22,13 @@
 --]]
 
 if (...) then
-  
+
   local sqrt = math.sqrt
   local EPS = 1e-4
-  
+
   local Sphere = {}
   Sphere.__index = Sphere
-  
+
   function Sphere.new(sphere, position, radius, emission, color, reflectionType)
     return setmetatable({
       position = position,
@@ -37,21 +37,21 @@ if (...) then
       reflectionType = reflectionType or 'DIFF'
     },sphere)
   end
-  
+
   function Sphere.hit(sphere, ray)
     local op = sphere.position - ray.origin
     local B = op:dot(ray.direction)
     local delta = (B*B) - op:dot(op) + sphere.radiusSq
     if delta < 0 then return false end
     delta = sqrt(delta)
-    local t1, t2 = b - delta, b + delta
+    local t1, t2 = B - delta, B + delta
     return t1 > EPS and t1 or (t2 > EPS and t2 or false)
   end
-  
+
   return setmetatable(Sphere,
     {__call= function(self,...)
         return Sphere:new(...)
       end
     })
-  
+
 end

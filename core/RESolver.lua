@@ -24,8 +24,8 @@
 if (...) then
   local max, rand = math.max, math.random()
   local MAX_DEPTH = 5
-  local Vec3 = require ((...):match('(.+)%w+%.lua$') .. ('vec3'))
-  
+  local Vec3 = require ((...):gsub('RESolver','vec3'))
+
   return function(scene, ray, depth, inclEmColor)
     local hitDistance, hitPrim = scene:getNearestHitPrimitive(ray)
     if not hitPrim then return Vec3() end
@@ -34,14 +34,14 @@ if (...) then
     local p = max(hitPrim.color.x, hitPrim.color.y, hitPrim.color.z)
     depth = depth + 1
     local fColor = hitPrim.color
-    if depth > MAX_DEPTH then  
+    if depth > MAX_DEPTH then
       if rand() < p then fColor = hitPrim.color * (1/p)
       else return hitPrim.emColor * (inclEmColor or 1)
       end
     end
     return scene.shaders[hitPrim.reflectionType](scene,
-      ray, hitPoint, hitNormal, 
+      ray, hitPoint, hitNormal,
       fColor, hitPrim.emColor, inclEmColor,
-      depth)    
+      depth)
   end
 end
