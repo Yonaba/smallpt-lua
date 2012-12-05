@@ -93,7 +93,7 @@ if (...) then
   end
   
   function Vec3.isNought(a)
-    return (a.x+a.y+a.z) == 0
+    return (a.x <= 0 and a.y <= 0 and a.z <= 0)
   end
 
   return setmetatable(Vec3,
