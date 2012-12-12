@@ -22,30 +22,32 @@
 --]]
 
 if (...) then
+  local type, assert = type, assert
+  local floor = math.floor
   
-  local Ray = {}
-  Ray.__index = Ray
+  local assertf = {}
   
-  -- Inits a new ray
-  -- A ray is a parametric line with 
-  -- An origin and a direction
-  function Ray:new(origin, direction)
-    return setmetatable({
-      origin = origin,
-      direction = direction
-    },Ray)
+  -- Is the passed-in parameter an  (int) > thresold ?
+  function assertf.isIntHigherThan(int, thresold, message)
+    local isNum = type(int) == 'number'
+    return assert(isNum and (floor(int)==int) and int>thresold, message)
   end
   
-  -- Returns the point lying on the ray 
-  -- At a distance d from its origin 
-  function Ray:pointAt(d)
-    return self.origin + (self.direction * d)
+  -- Is the passed-in parameter an  (int) >= thresold ?
+  function assertf.isIntHigherOrEqTo(int, thresold, message)
+    local isNum = type(int) == 'number'
+    return assert(isNum and (floor(int)==int) and int>=thresold, message)
   end
   
-  return setmetatable(Ray,
-    {__call= function(self,...)
-        return Ray:new(...)
-      end
-    })
+  -- Is the passed-in parameter an  number ?
+  function assertf.isNumber(num, message)
+    return assert(type(num)=='number', message)
+  end
   
+  -- Is the passed-in parameter a table ?
+  function assertf.isTable(v, message)
+    return assert(type(v)=='table', message)
+  end
+  
+  return assertf
 end

@@ -22,30 +22,24 @@
 --]]
 
 if (...) then
-  
-  local Ray = {}
-  Ray.__index = Ray
-  
-  -- Inits a new ray
-  -- A ray is a parametric line with 
-  -- An origin and a direction
-  function Ray:new(origin, direction)
-    return setmetatable({
-      origin = origin,
-      direction = direction
-    },Ray)
-  end
-  
-  -- Returns the point lying on the ray 
-  -- At a distance d from its origin 
-  function Ray:pointAt(d)
-    return self.origin + (self.direction * d)
-  end
-  
-  return setmetatable(Ray,
-    {__call= function(self,...)
-        return Ray:new(...)
-      end
-    })
-  
+  local sqrt = math.sqrt
+
+  return {
+    -- Clamps a value.
+    -- Assumes mininum and maximum bounds being respectively 0 and 1 when not given
+    clamp = function(v, min, max)
+      min, max = min or 0, max or 1
+      return v < min and min or (v > max and max or v)
+    end,
+
+    -- Solves a quadratic equation: a * x^2 + b *x + c = 0
+    solveQuadratic = function(a, b, c, EPS)
+	  EPS = EPS or 0
+      local delta = (b * b) - 4 * (a * c)
+      if delta < 0 then return false end
+      delta = sqrt(delta)
+      local t1, t2 = (b - delta)/(2 * a), (b + delta)/(2 * a)
+      return t1 > EPS and t1 or (t2 > EPS and t2 or false)
+    end,
+  }
 end

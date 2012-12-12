@@ -23,53 +23,61 @@
 
 if (...) then
 
-  local sqrt, max = math.sqrt, math.max
-
-  local clamp = function(v, mn, mx)
-    mn, mx = mn or 0, mx or 1
-    return v < mn and mn or (v > mx and mx or v)
-  end
+  local math_utils = require ((...):gsub('vec3$','math'))
+  local sqrt, max = math.sqrt, math.max  
+  local clamp = math_utils.clamp
 
   local Vec3 = {x = 0, y = 0, z = 0}
   Vec3.__index = Vec3
-  
-  function Vec3.new(v, x, y, z)
+
+  -- Inits a new vector
+  function Vec3:new(x, y, z)
     return setmetatable({
       x = x or 0,
       y = y or 0,
       z = z or 0,
-      },v)
+      },Vec3)
   end
 
-  function Vec3.__tostring(a)
-    return ('Vec3: x: %.3f y:%.3f z: %.3f')
-            :format(a.x, a.y, a.z)
+  -- Tostrings vector
+  function Vec3.__tostring(v)
+    return ('Vec3: x: %.5f y:%.5f z: %.5f')
+            :format(v.x, v.y, v.z)
   end
 
-  function Vec3.len(a)
-    return sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
+  -- Magnitude
+  function Vec3:len()
+    return sqrt(self.x * self.x 
+              + self.y * self.y 
+              + self.z * self.z)
   end
 
+  -- Vector addition
   function Vec3.__add(a, b)
     return Vec3:new(a.x + b.x, a.y + b.y, a.z + b.z)
   end
 
+  -- Vector substraction
   function Vec3.__sub(a, b)
     return Vec3:new(a.x - b.x, a.y - b.y, a.z - b.z)
   end
 
+  -- Vector scaling
   function Vec3.__mul(v, f)
     return Vec3:new(v.x * f, v.y * f, v.z * f)
   end
-
+  
+  -- Vector component-to-component product
   function Vec3.mul(a, b)
     return Vec3:new(a.x * b.x, a.y * b.y, a.z * b.z)
   end
 
+  -- Dot product
   function Vec3.dot(a, b)
     return (a.x * b.x + a.y * b.y + a.z * b.z)
   end
 
+  -- Cross product
   function Vec3.__mod(a, b)
     return Vec3:new(
       a.y * b.z - a.z * b.y,
@@ -77,23 +85,26 @@ if (...) then
       a.x * b.y - a.y * b.x
     )
   end
-  
+
+  -- Unary
   function Vec3.__unm(a)
     return Vec3:new(-a.x, -a.y, -a.z)
   end
 
-  function Vec3.norm(a)
-    local l = 1/sqrt(a.x * a.x + a.y * a.y + a.z * a.z)
-    a.x, a.y, a.z = a.x * l, a.y * l, a.z * l
-    return a
+  -- Normalization
+  function Vec3:norm()
+    local l = 1/sqrt(self.x * self.x 
+                   + self.y * self.y 
+                   + self.z * self.z)
+    self.x, self.y, self.z = self.x * l, self.y * l, self.z * l
+    return self
   end
 
-  function Vec3.clamp(a)
-    return Vec3:new(clamp(a.x), clamp(a.y), clamp(a.z))
-  end
-  
-  function Vec3.isNought(a)
-    return (a.x <= 0 and a.y <= 0 and a.z <= 0)
+  -- Clamping
+  function Vec3:clamp(mn, mx)
+    return Vec3:new(clamp(self.x, mn, mx),
+                    clamp(self.y, mn, mx), 
+                    clamp(self.z, mx, mx))
   end
 
   return setmetatable(Vec3,

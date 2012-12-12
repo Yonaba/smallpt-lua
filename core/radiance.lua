@@ -22,30 +22,32 @@
 --]]
 
 if (...) then
-  
-  local Ray = {}
-  Ray.__index = Ray
-  
-  -- Inits a new ray
-  -- A ray is a parametric line with 
-  -- An origin and a direction
-  function Ray:new(origin, direction)
-    return setmetatable({
-      origin = origin,
-      direction = direction
-    },Ray)
-  end
-  
-  -- Returns the point lying on the ray 
-  -- At a distance d from its origin 
-  function Ray:pointAt(d)
-    return self.origin + (self.direction * d)
-  end
-  
-  return setmetatable(Ray,
-    {__call= function(self,...)
-        return Ray:new(...)
+  local max, rand = math.max, math.random
+  local Vec3 = require ((...):gsub('radiance$','vec3'))
+
+  -- Returns an estimated radiance along a given ray
+  -- Recursive calls will be limited to a maximum depth
+  return function(scene, ray, inclEmColor, depth, MAX_DEPTH)
+    -- Checks for ray intersection
+    local hitDistance, hitPrim = scene:getNearestHitPrimitive(ray)
+    if not hitPrim then return Vec3() end
+    local hitPoint = ray:pointAt(hitDistance)
+    local hitNormal = (hitPoint - hitPrim.position):norm()
+
+    -- Russian roulette beyond MAX_DEPTH
+    local p = max(hitPrim.color.x, hitPrim.color.y, hitPrim.color.z)
+    depth = depth + 1
+    local fColor = hitPrim.color
+    if (depth > MAX_DEPTH or p==0) then
+      if rand() < p then fColor = fColor* (1/p)
+      else return hitPrim.emission * (inclEmColor or 0)
       end
-    })
-  
+    end
+
+    -- Applies shader
+    return scene.shaders[hitPrim.reflectionType](scene,
+      ray, hitPoint, hitNormal, fColor,
+      hitPrim.emission, inclEmColor,
+      depth, MAX_DEPTH)
+  end
 end
