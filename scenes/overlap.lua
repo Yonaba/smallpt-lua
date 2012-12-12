@@ -27,6 +27,8 @@ if (...) then
   local Sphere = require (_BASE .. ('primitive.sphere'))
   local Scene = require (_BASE .. ('scene'))
   
+   -- Needs validation, weird behaviour
+   
   local theScene = Scene()
   theScene:addPrimitive(
      --             position, rad,         emission,             color, reflTyp,
