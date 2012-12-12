@@ -22,14 +22,14 @@
 --]]
 
 if (...) then
-  local _BASE = (...):match('(.*)shaders.specular$')
+  local _BASE = (...):match('(.*)shaders%.specular$')
   local Ray = require (_BASE .. ('core.ray'))
-  local RESolver = require (_BASE .. ('core.RESolver'))
-
-  return function (scene, ray, hitPoint, n, color, emColor, inclEmColor, depth)
+  local radiance = require (_BASE .. ('core.radiance'))
+  
+  -- Evaluates specular (mirror) reflection
+  return function (scene, ray, hitPoint, n, color, emColor, inclEmColor, depth, MAX_DEPTH)
     local newRay = Ray(hitPoint, ray.direction - n * (2 * n:dot(ray.direction)))
-    local newRadiance = RESolver(scene, newRay, depth)
+    local newRadiance = radiance(scene, newRay, nil, depth, MAX_DEPTH)
     return emColor + color:mul(newRadiance)
   end
-
 end
