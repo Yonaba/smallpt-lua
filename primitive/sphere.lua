@@ -22,30 +22,44 @@
 --]]
 
 if (...) then
+  local math_utils = require ((...):gsub('primitive%.sphere$','core.math'))
 
   local sqrt = math.sqrt
-  local EPS = 1e-4
+  local assert = assert
+
+  local REFLTYPES = 'DIFF|SPEC|REFR'
+  local function checkRefl(str)
+    return str and not REFLTYPES:match(str):match('[^%a]')
+  end
 
   local Sphere = {}
   Sphere.__index = Sphere
 
-  function Sphere.new(sphere, position, radius, emission, color, reflectionType)
+  -- Inits a new shpere primitive
+  function Sphere:new(pos, rad, emission, color, reflType)
+    assert(checkRefl(reflType),'Non valid Reflection type')
     return setmetatable({
-      position = position,
-      radius = radius, radiusSq = radius * radius,
+      position = pos,
+      radius = rad, radiusSq = rad * rad,
       emission = emission, color = color,
-      reflectionType = reflectionType or 'DIFF'
-    },sphere)
+      reflectionType = reflType  -- Possible values: DIFF|SPEC|REFR
+    },Sphere)
   end
 
-  function Sphere.hit(sphere, ray)
-    local op = sphere.position - ray.origin
-    local B = op:dot(ray.direction)
-    local delta = (B*B) - op:dot(op) + sphere.radiusSq
-    if delta < 0 then return false end
-    delta = sqrt(delta)
-    local t1, t2 = B - delta, B + delta
-    return t1 > EPS and t1 or (t2 > EPS and t2 or false)
+  -- Tests if a ray hits a sphere
+  -- Returns distance if hit, false otherwise
+  function Sphere:hit(ray, eps)
+    local o_p = self.position - ray.origin
+    
+    -- Let t a distance
+    -- Ray vs Sphere intersection Equation a * t ^ 2 + b * t + c = 0
+    local d = math_utils.solveQuadratic(
+      1,  -- a : ray.d:dot(ray.d) = 1, because normalized
+      (o_p):dot(ray.direction) * 2, -- b : 2 * (o_p):dot(ray.d)
+      (o_p):dot(o_p) - self.radiusSq, -- c : (o_p):dot(o_p) - (self.rad ^ 2)
+      eps --[[ eps acts as a small fudge factor]])
+    
+    return d 
   end
 
   return setmetatable(Sphere,
