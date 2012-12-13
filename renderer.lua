@@ -98,10 +98,10 @@ if (...) then
 			-- Yields current progress
       coroutine.yield(false, (((y * w) + (y + x))*100)/npix)
       end
-    end
-    
+    end    
     -- Maps gamma correction and returns output
     coroutine.yield(true, mapfunc(map, mapGamma, gammaFactor, colorRange))
+    -- return map
   end
 
 
@@ -180,7 +180,8 @@ if (...) then
 
   -- Renders scene
   -- Needs to be continously called until rendering terminates
-  function GIRenderer:render(scene)    
+  function GIRenderer:render(scene) 
+  --[
     if not self.__renderer then
       self.__renderer = coroutine.create(render)
     end
@@ -191,8 +192,9 @@ if (...) then
         self.aa, self.spp, self.max_depth,
         self.eye, self.gaze, self.fov)
     return status, progress
+    --]]
     --[[
-    render(scene,self.width, self.height,
+    return render(scene,self.width, self.height,
         self.aa, self.spp, self.max_depth,
         self.eye, self.gaze, self.fov)
     --]]
