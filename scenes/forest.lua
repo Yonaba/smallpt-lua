@@ -22,10 +22,10 @@
 --]]
 
 if (...) then
-  local _BASE = (...):match('(.*)scenes%.forest$')
-  local Vec3 = require (_BASE .. ('core.vec3'))
-  local Sphere = require (_BASE .. ('primitive.sphere'))
-  local Scene = require (_BASE .. ('scene'))
+  local ROOT_PATH = (...):match('^(.*[%./])[^%.%/]+[%./][^%.%/]+$')  or ''
+  local Vec3 = require (ROOT_PATH .. ('core.vec3'))
+  local Sphere = require (ROOT_PATH .. ('primitive.sphere'))
+  local Scene = require (ROOT_PATH .. ('scene'))
   
   local cos, sin, pi = math.cos, math.sin, math.pi
   local tc = Vec3(0.0588, 0.361, 0.0941)

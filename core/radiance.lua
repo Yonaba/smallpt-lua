@@ -21,10 +21,12 @@
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --]]
 
-if (...) then
+if (...) then  
+  local CORE_PATH = (...):match('^(.*[%./])[^%.%/]+$') or ''
+  local Vec3 = require (CORE_PATH .. 'vec3')
+  
   local max, rand = math.max, math.random
-  local Vec3 = require ((...):gsub('radiance$','vec3'))
-
+  
   -- Returns an estimated radiance along a given ray
   -- Recursive calls will be limited to a maximum depth
   return function(scene, ray, inclEmColor, depth, MAX_DEPTH)

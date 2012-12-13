@@ -22,8 +22,9 @@
 --]]
 
 if (...) then
-
-  local math_utils = require ((...):gsub('vec3$','math'))
+  local CORE_PATH = (...):match('^(.*[%./])[^%.%/]+$') or ''
+  local math_utils = require (CORE_PATH .. 'math')
+  
   local sqrt, max = math.sqrt, math.max  
   local clamp = math_utils.clamp
 

@@ -22,10 +22,10 @@
 --]]
 
 if (...) then
-  local _BASE = (...):match('(.*)scenes%.vista$')
-  local Vec3 = require (_BASE .. ('core.vec3'))
-  local Sphere = require (_BASE .. ('primitive.sphere'))
-  local Scene = require (_BASE .. ('scene'))
+  local ROOT_PATH = (...):match('^(.*[%./])[^%.%/]+[%./][^%.%/]+$')  or ''
+  local Vec3 = require (ROOT_PATH .. ('core.vec3'))
+  local Sphere = require (ROOT_PATH .. ('primitive.sphere'))
+  local Scene = require (ROOT_PATH .. ('scene'))
   
   local Center = Vec3(50,-20,-860)
   

@@ -21,11 +21,12 @@
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --]]
 
-if (...) then
+if (...) then  
+  local ROOT_PATH = (...):match('^(.*[%./])[^%.%/]+[%./][^%.%/]+$')  or ''
+  local Ray = require (ROOT_PATH .. ('core.ray'))
+  local radiance = require (ROOT_PATH .. ('core.radiance'))
+  
   local sqrt, rand = math.sqrt, math.random
-  local _BASE = (...):match('(.*)shaders%.refractive$')
-  local Ray = require (_BASE .. ('core.ray'))
-  local radiance = require (_BASE .. ('core.radiance'))
   
   -- Evaluates refractive (dieletric) reflection
   return function (scene, ray, hitPoint, n, color, emColor, inclEmColor, depth, MAX_DEPTH)

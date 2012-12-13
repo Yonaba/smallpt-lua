@@ -22,12 +22,12 @@
 --]]
 
 if (...) then
-  local sqrt = math.sqrt
-  local _BASE = (...):match('(.*)scenes%.nightsky$')
-  local Vec3 = require (_BASE .. ('core.vec3'))
-  local Sphere = require (_BASE .. ('primitive.sphere'))
-  local Scene = require (_BASE .. ('scene'))
+  local ROOT_PATH = (...):match('^(.*[%./])[^%.%/]+[%./][^%.%/]+$')  or ''
+  local Vec3 = require (ROOT_PATH .. ('core.vec3'))
+  local Sphere = require (ROOT_PATH .. ('primitive.sphere'))
+  local Scene = require (ROOT_PATH .. ('scene'))
   
+  local sqrt = math.sqrt
   
   local theScene = Scene()
   theScene:addPrimitive(

@@ -22,9 +22,9 @@
 --]]
 
 if (...) then
-  local _BASE = (...):match('(.*)shaders%.specular$')
-  local Ray = require (_BASE .. ('core.ray'))
-  local radiance = require (_BASE .. ('core.radiance'))
+  local ROOT_PATH = (...):match('^(.*[%./])[^%.%/]+[%./][^%.%/]+$')  or ''
+  local Ray = require (ROOT_PATH .. ('core.ray'))
+  local radiance = require (ROOT_PATH .. ('core.radiance'))
   
   -- Evaluates specular (mirror) reflection
   return function (scene, ray, hitPoint, n, color, emColor, inclEmColor, depth, MAX_DEPTH)

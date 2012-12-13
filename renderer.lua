@@ -23,11 +23,11 @@
 
 if (...) then
 
-  local _BASE = (...):match('(.*)renderer$')
-  local assertf = require (_BASE .. ('core.assert'))
-  local Vec3 = require (_BASE .. ('core.vec3'))
-  local Ray = require (_BASE .. ('core.ray'))
-  local radiance = require (_BASE .. ('core.radiance'))
+  local CORE_PATH = (...):match('^(.*[%./])[^%.%/]+$') or ''
+  local assertf = require (CORE_PATH .. ('core.assert'))
+  local Vec3 = require (CORE_PATH .. ('core.vec3'))
+  local Ray = require (CORE_PATH .. ('core.ray'))
+  local radiance = require (CORE_PATH .. ('core.radiance'))
 
 
   local rand, sqrt, pow, floor = math.random, math.sqrt, math.pow, math.floor

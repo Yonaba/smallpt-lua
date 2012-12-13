@@ -22,11 +22,10 @@
 --]]
 
 if (...) then
-  
-  local _BASE = (...):match('(.*)shaders%.diffuse$')
-  local Vec3 = require (_BASE .. ('core.vec3'))
-  local Ray = require (_BASE .. ('core.ray'))
-  local radiance = require (_BASE .. ('core.radiance'))
+  local ROOT_PATH = (...):match('^(.*[%./])[^%.%/]+[%./][^%.%/]+$')  or ''
+  local Vec3 = require (ROOT_PATH .. ('core.vec3'))
+  local Ray = require (ROOT_PATH .. ('core.ray'))
+  local radiance = require (ROOT_PATH .. ('core.radiance'))
 
   local cos, sin = math.cos, math.sin
   local sqrt, rand, abs = math.sqrt, math.random, math.abs

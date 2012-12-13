@@ -22,18 +22,18 @@
 --]]
 
 if (...) then
-  local ipairs = ipairs
-
   -- Shaders
-  local _BASE = (...):match('(.*)scene$')
+  local CORE_PATH = (...):match('^(.*[%./])[^%.%/]+$') or ''
   
   -- Push all existing shaders in each scene
   local SHADERS = {
-    ['DIFF'] = require (_BASE .. ('shaders.diffuse')),
-    ['REFR'] = require (_BASE .. ('shaders.refractive')),
-    ['SPEC'] = require (_BASE .. ('shaders.specular'))
+    ['DIFF'] = require (CORE_PATH .. ('shaders.diffuse')),
+    ['REFR'] = require (CORE_PATH .. ('shaders.refractive')),
+    ['SPEC'] = require (CORE_PATH .. ('shaders.specular'))
   }
 
+  local ipairs = ipairs
+  
   -- Ray vs Sphere intersection check
   local INF = math.huge -- Maximum distance
   local MINIMAL_HIT = 1e-4 -- Minimal distance

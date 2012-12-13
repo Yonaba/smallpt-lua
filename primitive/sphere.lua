@@ -22,7 +22,8 @@
 --]]
 
 if (...) then
-  local math_utils = require ((...):gsub('primitive%.sphere$','core.math'))
+  local ROOT_PATH = (...):match('^(.*[%./])[^%.%/]+[%./][^%.%/]+$') or ''
+  local math_utils = require (ROOT_PATH .. 'core.math')
 
   local sqrt = math.sqrt
   local assert = assert
