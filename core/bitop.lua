@@ -133,7 +133,7 @@ local function bit_not(...)
 end
 
 return {
-	AND = bit_band,
-	OR = bit_bor,
-	NOT = bit_not,
+	_and = bit_band,
+	_or = bit_bor,
+	_not = bit_not,
 }
