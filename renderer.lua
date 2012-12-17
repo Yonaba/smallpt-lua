@@ -99,7 +99,7 @@ if (...) then
       coroutine.yield(false, (((y * w) + (y + x))*100)/npix)
       end
     end    
-    -- Maps gamma correction and returns output
+    -- Applies gamma correction and returns output
     coroutine.yield(true, mapfunc(map, mapGamma, gammaFactor, colorRange))
     -- return map
   end
