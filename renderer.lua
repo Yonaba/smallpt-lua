@@ -35,7 +35,7 @@ if (...) then
   local coroutine = coroutine
 
   -- Returns a 2D array w * h sized
-  -- Indicing starts at 0 on width and height
+  -- Indices start at 0 on width and height
   local array2d = function (w, h)
     local m = {}
     for y = 0, h-1 do m[y] = {}
@@ -63,7 +63,7 @@ if (...) then
 
   -- Main rendering loop
   -- Not to be used straight, needs to be wrapped inside a coroutine
-  -- ToDo: Refactor with a table-less vector class (for speed ?)
+  -- (ToDo: Refactor with buckets ?)
   local function render(scene, w, h, aa, spp, max_depth, eye, gaze, fov)
     local npix = h*w+h+w
     local inv_aa_sq = 1/(aa * aa)
